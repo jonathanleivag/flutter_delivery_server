@@ -1,0 +1,22 @@
+{
+  "name": "flutter_delivery_server",
+  "version": "1.0.0",
+  "description": "flutter delivery server",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "flutter_delivery_server"
+  },
+  "keywords": [
+    "node",
+    "js",
+    "typescript",
+    "express",
+    "mongodb"
+  ],
+  "author": "Jonathanleivag",
+  "license": "MIT"
+}
