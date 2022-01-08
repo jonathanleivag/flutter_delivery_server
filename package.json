@@ -4,9 +4,9 @@
   "description": "flutter delivery server",
   "main": "index.js",
   "scripts": {
-    "dev":"ts-node ./index.ts",
-    "build":"tsc -p .",
-    "start":"node ./dist/index.js"
+    "dev": "ts-node ./src/index.ts",
+    "build": "tsc -p .",
+    "start": "node ./dist/index.js"
   },
   "repository": {
     "type": "git",
@@ -22,6 +22,7 @@
   "author": "Jonathanleivag",
   "license": "MIT",
   "devDependencies": {
+    "@types/express": "^4.17.13",
     "@typescript-eslint/eslint-plugin": "^5.9.0",
     "@typescript-eslint/parser": "^5.9.0",
     "eslint": "^7.32.0",
@@ -30,5 +31,9 @@
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^5.2.0",
     "ts-node-dev": "^1.1.8"
+  },
+  "dependencies": {
+    "dotenv": "^10.0.0",
+    "express": "^4.17.2"
   }
 }
