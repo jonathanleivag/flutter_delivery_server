@@ -4,6 +4,7 @@ import Environments from '../config/env'
 import cors from 'cors'
 import morgan from 'morgan'
 import path from 'path'
+import MongoDB from '../db/mongodb'
 
 export default class Server {
   private app: Express
@@ -31,11 +32,17 @@ export default class Server {
   serverHttp (): void {
     this.server.listen(this.port, () => {
       // eslint-disable-next-line no-console
-      console.log(`Server is running on port ${this.port}`)
+      console.log(`🚀 Server is running on port ${this.port}`)
     })
   }
 
+  database (): void {
+    const db = new MongoDB()
+    db.execute()
+  }
+
   execute (): void {
+    this.database()
     this.config()
     this.middlewares()
     this.serverHttp()
