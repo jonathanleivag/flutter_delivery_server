@@ -4,7 +4,7 @@
   "description": "flutter delivery server",
   "main": "index.js",
   "scripts": {
-    "dev": "ts-node ./src/index.ts",
+    "dev": "ts-node-dev ./src/index.ts",
     "build": "tsc -p .",
     "start": "node ./dist/index.js"
   },

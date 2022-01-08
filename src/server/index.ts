@@ -5,6 +5,7 @@ import cors from 'cors'
 import morgan from 'morgan'
 import path from 'path'
 import MongoDB from '../db/mongodb'
+import { UserRoute } from '../routers'
 
 export default class Server {
   private app: Express
@@ -29,6 +30,10 @@ export default class Server {
     this.app.disable('x-powered-by')
   }
 
+  routes () {
+    this.app.use('/api/user', new UserRoute().execute())
+  }
+
   serverHttp (): void {
     this.server.listen(this.port, () => {
       // eslint-disable-next-line no-console
@@ -45,6 +50,7 @@ export default class Server {
     this.database()
     this.config()
     this.middlewares()
+    this.routes()
     this.serverHttp()
   }
 }
