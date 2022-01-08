@@ -12,18 +12,13 @@ export default class UserRoute {
     return this.router.post('/new', new UserController().execute().newUser)
   }
 
-  login (): Router {
-    return this.router.post('/login', (_, res) => {
-      res.json({
-        ok: true,
-        user: 'login'
-      })
-    })
+  getAllUsers (): Router {
+    return this.router.get('/all', new UserController().execute().getAllUsers)
   }
 
   execute (): Router {
     this.newUser()
-    this.login()
+    this.getAllUsers()
     return this.router
   }
 }

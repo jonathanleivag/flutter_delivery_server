@@ -6,6 +6,7 @@ export default interface IUserModel {
   phone: string
   image?: string
   password: string
+  passwordConfirm?: string
   isAviabile: boolean
   sessionToken: string
   createdAt: Date

@@ -1,7 +1,7 @@
 import { Schema, model } from 'mongoose'
 import { IUserModel } from '../../../types/interfeces'
 
-const schema = new Schema<IUserModel>(
+const UserModel = new Schema<IUserModel>(
   {
     email: { type: String, required: true, unique: true },
     name: { type: String, required: true },
@@ -9,8 +9,8 @@ const schema = new Schema<IUserModel>(
     phone: { type: String, required: true },
     image: { type: String, required: false },
     password: { type: String, required: true },
-    isAviabile: { type: Boolean, required: true },
-    sessionToken: { type: String, required: true }
+    isAviabile: { type: Boolean },
+    sessionToken: { type: String }
   },
   {
     timestamps: true,
@@ -18,4 +18,4 @@ const schema = new Schema<IUserModel>(
   }
 )
 
-export default model<IUserModel>('User', schema)
+export default model<IUserModel>('User', UserModel)
