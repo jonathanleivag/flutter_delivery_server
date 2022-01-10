@@ -14,7 +14,7 @@ export default class Server {
 
   constructor () {
     this.app = express()
-    this.port = Environments.PORT
+    this.port = new Environments().PORT
     this.server = http.createServer(this.app)
   }
 

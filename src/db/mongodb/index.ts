@@ -5,7 +5,7 @@ export default class MongoDB {
   private uri: string
 
   constructor () {
-    this.uri = Environments.URI
+    this.uri = new Environments().URI
   }
 
   async connect (): Promise<typeof mongoose> {

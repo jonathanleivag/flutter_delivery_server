@@ -18,4 +18,10 @@ const UserModel = new Schema<IUserModel>(
   }
 )
 
+UserModel.method('toJSON', function () {
+  const { _id, password, ...rest } = this.toObject()
+
+  return { id: _id, ...rest }
+})
+
 export default model<IUserModel>('User', UserModel)

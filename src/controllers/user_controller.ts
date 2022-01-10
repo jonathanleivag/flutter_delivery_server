@@ -1,32 +1,58 @@
 import { Request, Response } from 'express'
 import { UserModel } from '../db/mongodb/models'
 import { UserValidation } from '../validations'
-import { genSaltSync, hashSync } from 'bcryptjs'
+import { DataJsonResUtil, JwtUtil } from '../utils'
+import { genSaltSync, hashSync, compareSync } from 'bcryptjs'
+import { IUserModel } from '../types/interfeces'
+export interface IUserLogin {
+  email: string
+  password: string
+  token?: string
+}
 
 export default class UserController {
   async newUser (req: Request, res: Response): Promise<void> {
+    const body: IUserModel = req.body
     try {
       const userValidation = new UserValidation()
-      await userValidation.newUserValidation().validate(req.body)
+      await userValidation.newUserValidation().validate(body)
 
-      const userExist = await UserModel.findOne({ email: req.body.email })
+      const userExist = await UserModel.findOne({ email: body.email })
       if (userExist) {
-        res.status(400).json({
-          message: 'El usuario ya existe',
-          success: false
-        })
+        res
+          .status(400)
+          .json(
+            new DataJsonResUtil(
+              'El usuario ya existe',
+              false,
+              null,
+              null
+            ).json()
+          )
       } else {
-        const user = new UserModel(req.body)
+        const user = new UserModel(body)
 
         const salt = genSaltSync(10)
-        user.password = hashSync(user.password, salt)
+        user.password = hashSync(body.password, salt)
 
-        await user.save()
-        res.status(201).json({
-          user,
-          success: true,
-          message: 'Se creo con exito el usuario ' + user.name
-        })
+        const userSave = await user.save()
+
+        const { password, ...rest } = userSave.toJSON()
+        const jwt = new JwtUtil()
+
+        res.status(201).json(
+          new DataJsonResUtil(
+            'Usuario creado',
+            true,
+            rest,
+            jwt.sign({
+              id: user.id,
+              email: user.email,
+              name: user.name,
+              lastName: user.lastName
+            })
+          ).json()
+        )
       }
     } catch (error) {
       if (error instanceof Error) {
@@ -37,16 +63,60 @@ export default class UserController {
 
   async getAllUsers (req: Request, res: Response): Promise<void> {
     try {
-      const users = await UserModel.find()
-      res.status(201).json({ users, success: true })
+      const users = await UserModel.find().select('-password')
+      res.status(201).json(new DataJsonResUtil(null, true, users, null).json())
     } catch (error) {
       if (error instanceof Error) {
-        res.status(501).json({ message: error.message, success: false })
+        res
+          .status(501)
+          .json(new DataJsonResUtil(error.message, false, null, null).json())
+      }
+    }
+  }
+
+  async login (req: Request, res: Response): Promise<void> {
+    try {
+      const body: IUserLogin = req.body
+      const user = await UserModel.findOne({ email: body.email })
+
+      if (!user) {
+        throw new Error('Error de credenciales')
+      }
+
+      if (!compareSync(body.password, user.password)) {
+        throw new Error('error de credenciales')
+      }
+
+      const { password, ...rest } = user.toJSON()
+
+      const jwt = new JwtUtil()
+      res.status(201).json(
+        new DataJsonResUtil(
+          null,
+          true,
+          rest,
+          jwt.sign({
+            id: user.id,
+            email: user.email,
+            name: user.name,
+            lastName: user.lastName
+          })
+        ).json()
+      )
+    } catch (error) {
+      if (error instanceof Error) {
+        res
+          .status(400)
+          .json(new DataJsonResUtil(error.message, false, null, null).json())
       }
     }
   }
 
   execute () {
-    return { newUser: this.newUser, getAllUsers: this.getAllUsers }
+    return {
+      newUser: this.newUser,
+      getAllUsers: this.getAllUsers,
+      login: this.login
+    }
   }
 }

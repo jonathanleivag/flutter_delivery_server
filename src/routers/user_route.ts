@@ -16,9 +16,14 @@ export default class UserRoute {
     return this.router.get('/all', new UserController().execute().getAllUsers)
   }
 
+  login (): Router {
+    return this.router.post('/login', new UserController().execute().login)
+  }
+
   execute (): Router {
     this.newUser()
     this.getAllUsers()
+    this.login()
     return this.router
   }
 }
