@@ -13,7 +13,7 @@ export default class RoleRoute {
   }
 
   getRoleUser (): Router {
-    return this.router.get(
+    return this.router.post(
       '/get/user',
       new RoleController().execute().getRoleUser
     )
