@@ -9,14 +9,19 @@ export default class RoleRoute {
   }
 
   createRole (): Router {
+    return this.router.get('/create', new RoleController().execute().createRole)
+  }
+
+  getRoleUser (): Router {
     return this.router.get(
-      '/create',
-      new RoleController().execute().createRole
+      '/get/user',
+      new RoleController().execute().getRoleUser
     )
   }
 
   execute (): Router {
     this.createRole()
+    this.getRoleUser()
     return this.router
   }
 }

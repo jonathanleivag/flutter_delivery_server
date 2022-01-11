@@ -32,7 +32,7 @@ export default class Server {
 
   routes () {
     this.app.use('/api/user', new UserRoute().execute())
-    this.app.use('/role', new RoleRoute().execute())
+    this.app.use('/api/role', new RoleRoute().execute())
   }
 
   serverHttp (): void {

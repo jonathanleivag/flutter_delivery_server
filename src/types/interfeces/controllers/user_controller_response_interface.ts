@@ -1,4 +1,4 @@
-import { IUserModel } from '../'
+import { IRoleModel, IRoleUserModel, IUserModel } from '../'
 
 export interface IUserResponse {
   id: string
@@ -16,6 +16,6 @@ export interface IUserResponse {
 export default interface IUserControllerResponse {
   message: string | null
   success: boolean
-  data: IUserModel | IUserModel[] | IUserResponse | IUserResponse[] | null
+  data: IUserModel | IUserModel[] | IUserResponse | IRoleModel | IRoleModel[] | IRoleUserModel | IRoleUserModel[] | null,
   token: string | null
 }

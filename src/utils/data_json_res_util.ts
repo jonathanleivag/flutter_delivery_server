@@ -1,16 +1,16 @@
-import { IUserControllerResponse, IUserModel } from '../types/interfeces'
+import { IRoleModel, IRoleUserModel, IUserControllerResponse, IUserModel } from '../types/interfeces'
 import { IUserResponse } from '../types/interfeces/controllers/user_controller_response_interface'
 
 export default class DataJsonResUtil {
   private message: string | null
   private success: boolean
-  private data: IUserModel | IUserModel[] | IUserResponse | null
+  private data: IUserModel | IUserModel[] | IUserResponse | IRoleModel | IRoleModel[] | IRoleUserModel | IRoleUserModel[] | null
   private token: string | null
 
   constructor (
     message: string | null,
     success: boolean,
-    data: IUserModel | IUserModel[] | IUserResponse | null,
+    data: IUserModel | IUserModel[] | IUserResponse | IRoleModel | IRoleModel[] | IRoleUserModel | IRoleUserModel[] | null,
     token: string | null
   ) {
     this.message = message

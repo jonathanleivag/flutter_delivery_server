@@ -2,9 +2,12 @@ import { Request, Response } from 'express'
 import { IRoleModel } from '../types/interfeces'
 import RoleModel from '../db/mongodb/models/role_model'
 import { DataJsonResUtil } from '../utils'
+import { RoleUserModel } from '../db/mongodb/models'
+import { RoleValidation } from '../validations'
 
 interface IExicute {
   createRole: (req: Request, res: Response) => Promise<void>
+  getRoleUser: (req: Request, res: Response) => Promise<void>
 }
 
 export default class RoleController {
@@ -37,9 +40,32 @@ export default class RoleController {
     }
   }
 
+  async getRoleUser (req: Request, res: Response): Promise<void> {
+    const body: { id: string } = req.body
+
+    try {
+      const bodyValidation = new RoleValidation()
+      await bodyValidation.getRoleUser().validate(body)
+
+      const rolesUser = await RoleUserModel.find({ user: body.id }).populate([
+        'role',
+        'user'
+      ])
+
+      res.status(200).json(new DataJsonResUtil(null, true, rolesUser, null))
+    } catch (error) {
+      if (error instanceof Error) {
+        res
+          .status(400)
+          .json(new DataJsonResUtil(error.message, false, null, null))
+      }
+    }
+  }
+
   execute (): IExicute {
     return {
-      createRole: this.createRole
+      createRole: this.createRole,
+      getRoleUser: this.getRoleUser
     }
   }
 }
