@@ -4,10 +4,17 @@ import { UserValidation } from '../validations'
 import { DataJsonResUtil, JwtUtil } from '../utils'
 import { genSaltSync, hashSync, compareSync } from 'bcryptjs'
 import { IUserModel } from '../types/interfeces'
+
 export interface IUserLogin {
   email: string
   password: string
   token?: string
+}
+
+interface IExicute {
+  newUser: (req: Request, res: Response) => Promise<void>
+  getAllUsers: (req: Request, res: Response) => Promise<void>
+  login: (req: Request, res: Response) => Promise<void>
 }
 
 export default class UserController {
@@ -112,7 +119,7 @@ export default class UserController {
     }
   }
 
-  execute () {
+  execute (): IExicute {
     return {
       newUser: this.newUser,
       getAllUsers: this.getAllUsers,
