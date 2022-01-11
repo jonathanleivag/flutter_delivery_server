@@ -48,8 +48,8 @@ export default class RoleController {
       await bodyValidation.getRoleUser().validate(body)
 
       const rolesUser = await RoleUserModel.find({ user: body.id }).populate([
-        'role',
-        'user'
+        { path: 'user', select: '-password' },
+        'role'
       ])
 
       res.status(200).json(new DataJsonResUtil(null, true, rolesUser, null))
