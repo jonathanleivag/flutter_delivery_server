@@ -1,5 +1,5 @@
 import { Request, Response } from 'express'
-import { UserModel } from '../db/mongodb/models'
+import { RoleModel, RoleUserModel, UserModel } from '../db/mongodb/models'
 import { UserValidation } from '../validations'
 import { DataJsonResUtil, JwtUtil } from '../utils'
 import { genSaltSync, hashSync, compareSync } from 'bcryptjs'
@@ -43,6 +43,15 @@ export default class UserController {
         user.password = hashSync(body.password, salt)
 
         const userSave = await user.save()
+
+        const role = await RoleModel.findOne({ name: 'client' })
+
+        if (!role) {
+          throw new Error('No existe el rol')
+        }
+
+        const newRoleUser = new RoleUserModel({ user, role })
+        await newRoleUser.save()
 
         const { password, ...rest } = userSave.toJSON()
         const jwt = new JwtUtil()

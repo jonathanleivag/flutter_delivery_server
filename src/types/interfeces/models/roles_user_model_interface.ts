@@ -3,7 +3,7 @@ import User from './user_model_interface'
 
 export default interface IRoleUser {
   user: User
-  rol: Role
+  role: Role
   craeteAt: Date
   updateAt: Date
 }
