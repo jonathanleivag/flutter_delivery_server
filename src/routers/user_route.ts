@@ -20,10 +20,18 @@ export default class UserRoute {
     return this.router.post('/login', new UserController().execute().login)
   }
 
+  verifyToken (): Router {
+    return this.router.get(
+      '/verify',
+      new UserController().execute().verifyToken
+    )
+  }
+
   execute (): Router {
     this.newUser()
     this.getAllUsers()
     this.login()
+    this.verifyToken()
     return this.router
   }
 }

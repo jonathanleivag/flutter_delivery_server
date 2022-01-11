@@ -1,4 +1,5 @@
 import { IRoleModel, IRoleUserModel, IUserModel } from '../'
+import { ITokenData } from '../../../utils/jwt_util'
 
 export interface IUserResponse {
   id: string
@@ -16,6 +17,6 @@ export interface IUserResponse {
 export default interface IUserControllerResponse {
   message: string | null
   success: boolean
-  data: IUserModel | IUserModel[] | IUserResponse | IRoleModel | IRoleModel[] | IRoleUserModel | IRoleUserModel[] | null,
+  data: IUserModel | IUserModel[] | IUserResponse | IRoleModel | IRoleModel[] | IRoleUserModel | IRoleUserModel[] | ITokenData | null,
   token: string | null
 }

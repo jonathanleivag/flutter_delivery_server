@@ -15,6 +15,7 @@ interface IExicute {
   newUser: (req: Request, res: Response) => Promise<void>
   getAllUsers: (req: Request, res: Response) => Promise<void>
   login: (req: Request, res: Response) => Promise<void>
+  verifyToken: (req: Request, res: Response) => void
 }
 
 export default class UserController {
@@ -128,11 +129,37 @@ export default class UserController {
     }
   }
 
+  verifyToken (req: Request, res: Response): void {
+    const token = req.headers.authorization
+    if (!token) {
+      res
+        .status(401)
+        .json(
+          new DataJsonResUtil('No token provided', false, null, null).json()
+        )
+    } else {
+      const jwt = new JwtUtil()
+      try {
+        const decoded = jwt.verify(token)
+        res
+          .status(201)
+          .json(new DataJsonResUtil(null, true, decoded, null).json())
+      } catch (error) {
+        if (error instanceof Error) {
+          res
+            .status(401)
+            .json(new DataJsonResUtil(error.message, false, null, null).json())
+        }
+      }
+    }
+  }
+
   execute (): IExicute {
     return {
       newUser: this.newUser,
       getAllUsers: this.getAllUsers,
-      login: this.login
+      login: this.login,
+      verifyToken: this.verifyToken
     }
   }
 }
