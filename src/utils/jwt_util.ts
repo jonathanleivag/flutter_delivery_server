@@ -10,7 +10,7 @@ export interface ITokenData {
 
 export default class JwtUtil {
   sign (data: ITokenData): string {
-    return sign(data, new Environments().SECRET_KEY_JWT, { expiresIn: '30d' })
+    return sign(data, new Environments().SECRET_KEY_JWT)
   }
 
   verify (token: string): ITokenData {
