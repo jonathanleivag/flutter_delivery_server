@@ -16,6 +16,10 @@ export default class UserRoute {
     return this.router.get('/all', new UserController().execute().getAllUsers)
   }
 
+  updateUser (): Router {
+    return this.router.put('/update', new UserController().execute().updateUser)
+  }
+
   login (): Router {
     return this.router.post('/login', new UserController().execute().login)
   }
@@ -32,6 +36,7 @@ export default class UserRoute {
     this.getAllUsers()
     this.login()
     this.verifyToken()
+    this.updateUser()
     return this.router
   }
 }

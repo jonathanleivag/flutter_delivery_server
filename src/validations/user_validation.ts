@@ -18,4 +18,19 @@ export default class UserValidation {
       // sessionToken: string().required()
     })
   }
+
+  updateUserValidation () {
+    return object().shape({
+      id: string().required('El id es requerido'),
+      email: string()
+        .required('El email es requerido')
+        .email(),
+      name: string().required('El nombre es requerido'),
+      lastName: string().required('El apellido es requerido'),
+      phone: string().required('El teléfono es requerido')
+      // image: string().required(),
+      // isAviabile: number().required(),
+      // sessionToken: string().required()
+    })
+  }
 }

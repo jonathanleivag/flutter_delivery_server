@@ -4,6 +4,7 @@ import { UserValidation } from '../validations'
 import { DataJsonResUtil, JwtUtil } from '../utils'
 import { genSaltSync, hashSync, compareSync } from 'bcryptjs'
 import { IUserModel } from '../types/interfeces'
+import { ITokenData } from '../utils/jwt_util'
 
 export interface IUserLogin {
   email: string
@@ -14,6 +15,7 @@ export interface IUserLogin {
 interface IExicute {
   newUser: (req: Request, res: Response) => Promise<void>
   getAllUsers: (req: Request, res: Response) => Promise<void>
+  updateUser: (req: Request, res: Response) => Promise<void>
   login: (req: Request, res: Response) => Promise<void>
   verifyToken: (req: Request, res: Response) => void
 }
@@ -74,6 +76,51 @@ export default class UserController {
     } catch (error) {
       if (error instanceof Error) {
         res.status(400).json({ message: error.message, success: false })
+      }
+    }
+  }
+
+  async updateUser (req: Request, res: Response): Promise<void> {
+    try {
+      const body: IUserModel = req.body as IUserModel
+      const userValidation = new UserValidation()
+      await userValidation.updateUserValidation().validate(body)
+
+      const token: string = req.headers.authorization as string
+      const jwt = new JwtUtil()
+      const userToken: ITokenData = jwt.verify(token)
+
+      const user = await UserModel.findById(body.id)
+
+      if (!user) {
+        throw new Error('No existe el usuario')
+      }
+
+      if (user.id !== userToken.id) {
+        throw new Error('No tienes permisos para actualizar este usuario')
+      }
+      const updateUter = await UserModel.findByIdAndUpdate(body.id, body, {
+        new: true
+      })
+
+      res.status(201).json(
+        new DataJsonResUtil(
+          'Usuario actualizado',
+          true,
+          updateUter,
+          jwt.sign({
+            id: body.id,
+            email: body.email,
+            name: body.name,
+            lastName: body.lastName
+          })
+        ).json()
+      )
+    } catch (error) {
+      if (error instanceof Error) {
+        res
+          .status(501)
+          .json(new DataJsonResUtil(error.message, false, null, null).json())
       }
     }
   }
@@ -158,6 +205,7 @@ export default class UserController {
     return {
       newUser: this.newUser,
       getAllUsers: this.getAllUsers,
+      updateUser: this.updateUser,
       login: this.login,
       verifyToken: this.verifyToken
     }
