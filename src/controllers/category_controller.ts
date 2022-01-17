@@ -1,12 +1,7 @@
 import { Request, Response } from 'express'
-import {
-  CategoryModel,
-  RoleModel,
-  RoleUserModel,
-  UserModel
-} from '../db/mongodb/models'
-import { ICategoryModel, IUserModel } from '../types/interfeces'
-import { DataJsonResUtil, JwtUtil } from '../utils'
+import { CategoryModel } from '../db/mongodb/models'
+import { ICategoryModel } from '../types/interfeces'
+import { DataJsonResUtil, IsAuth, IsExist } from '../utils'
 import { CategoryValidation } from '../validations'
 
 export interface IExicute {
@@ -22,37 +17,11 @@ export default class CategoryController {
       const validationCateogry = new CategoryValidation()
       await validationCateogry.createCategory().validate(body)
 
-      const token: string = req.headers.authorization ?? ''
-      const jwt = new JwtUtil()
-      const userToken: IUserModel = jwt.verify(token) as IUserModel
+      const isAuth = new IsAuth(req.headers.authorization ?? '')
+      isAuth.isAuth('local')
 
-      const user = await UserModel.findById(userToken.id)
-      if (!user) {
-        throw new Error('Usuario no existe')
-      }
-
-      const role = await RoleModel.findOne({ name: 'local' })
-
-      if (!role) {
-        throw new Error('Rol no existe')
-      }
-
-      const roleUser = await RoleUserModel.findOne({
-        user: user.id,
-        role: role.id
-      })
-
-      if (!roleUser) {
-        throw new Error('Usuario no tiene permisos')
-      }
-
-      const categoryExist = await CategoryModel.findOne({
-        category: body.category
-      })
-
-      if (categoryExist) {
-        throw new Error('Categoria ya existe')
-      }
+      const isExist = new IsExist()
+      isExist.isExistCategoryByName(body.category)
 
       const newCategory = new CategoryModel(body)
       const category = await newCategory.save()
