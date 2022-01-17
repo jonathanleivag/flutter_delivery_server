@@ -5,7 +5,7 @@ import cors from 'cors'
 import morgan from 'morgan'
 import path from 'path'
 import MongoDB from '../db/mongodb'
-import { UserRoute, RoleRoute, CategoryRoute } from '../routers'
+import { UserRoute, RoleRoute, CategoryRoute, ProductRoute } from '../routers'
 
 export default class Server {
   private app: Express
@@ -34,6 +34,7 @@ export default class Server {
     this.app.use('/api/user', new UserRoute().execute())
     this.app.use('/api/role', new RoleRoute().execute())
     this.app.use('/api/category', new CategoryRoute().execute())
+    this.app.use('/api/product', new ProductRoute().execute())
   }
 
   serverHttp (): void {

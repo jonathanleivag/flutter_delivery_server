@@ -1,4 +1,4 @@
-import { ICategoryModel, IRoleModel, IRoleUserModel, IUserModel } from '../'
+import { ICategoryModel, IProductModel, IRoleModel, IRoleUserModel, IUserModel } from '../'
 import { ITokenData } from '../../../utils/jwt_util'
 
 export interface IUserResponse {
@@ -17,6 +17,6 @@ export interface IUserResponse {
 export default interface IUserControllerResponse {
   message: string | null
   success: boolean
-  data: IUserModel | IUserModel[] | IUserResponse | IRoleModel | IRoleModel[] | IRoleUserModel | IRoleUserModel[] | ITokenData | ICategoryModel | ICategoryModel[] | null,
+  data: IUserModel | IUserModel[] | IUserResponse | IRoleModel | IRoleModel[] | IRoleUserModel | IRoleUserModel[] | ITokenData | ICategoryModel | ICategoryModel[] | IProductModel | IProductModel[] | null,
   token: string | null
 }

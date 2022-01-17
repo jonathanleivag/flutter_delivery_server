@@ -6,7 +6,8 @@ const ProductModel = new Schema<IProductModel>(
     name: {
       type: String,
       required: true,
-      trim: true
+      trim: true,
+      unique: true
     },
     description: {
       type: String,
@@ -19,7 +20,7 @@ const ProductModel = new Schema<IProductModel>(
     },
     image1: {
       type: String,
-      required: false
+      required: true
     },
     image2: {
       type: String,

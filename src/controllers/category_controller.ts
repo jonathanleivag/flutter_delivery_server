@@ -51,7 +51,7 @@ export default class CategoryController {
       })
 
       if (categoryExist) {
-        throw new Error('Category already exist')
+        throw new Error('Categoria ya existe')
       }
 
       const newCategory = new CategoryModel(body)
