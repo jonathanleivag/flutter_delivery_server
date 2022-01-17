@@ -13,12 +13,12 @@ export interface IExicute {
 export default class CategoryController {
   async createCategory (req: Request, res: Response): Promise<void> {
     try {
+      const isAuth = new IsAuth(req.headers.authorization ?? '')
+      isAuth.isAuth('local')
+
       const body: ICategoryModel = req.body
       const validationCateogry = new CategoryValidation()
       await validationCateogry.createCategory().validate(body)
-
-      const isAuth = new IsAuth(req.headers.authorization ?? '')
-      isAuth.isAuth('local')
 
       const isExist = new IsExist()
       isExist.isExistCategoryByName(body.category)
