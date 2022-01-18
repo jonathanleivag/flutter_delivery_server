@@ -24,7 +24,7 @@ export default class RoleRoute {
 
   getAllCategory (): Router {
     return this.router.get(
-      '/getAll',
+      '/get/all',
       new CategoryController().execute().getAllCategory
     )
   }

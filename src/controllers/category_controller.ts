@@ -44,9 +44,24 @@ export default class CategoryController {
     }
   }
 
-  async getCategory (req: Request, res: Response): Promise<void> {}
+  async getAllCategory (req: Request, res: Response): Promise<void> {
+    try {
+      const categories = await CategoryModel.find()
+      res
+        .status(200)
+        .json(
+          new DataJsonResUtil('Lista de categorias', true, categories, null)
+        )
+    } catch (error) {
+      if (error instanceof Error) {
+        res
+          .status(400)
+          .json(new DataJsonResUtil(error.message, false, null, null))
+      }
+    }
+  }
 
-  async getAllCategory (req: Request, res: Response): Promise<void> {}
+  async getCategory (req: Request, res: Response): Promise<void> {}
 
   execute (): IExicute {
     return {
