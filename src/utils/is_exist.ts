@@ -20,11 +20,25 @@ export default class IsExist {
     return category
   }
 
+  async isNotExistCategoryByName (name: string): Promise<void> {
+    const category = await CategoryModel.findOne({ category: name })
+    if (category) {
+      throw new Error('Categoria ya existe')
+    }
+  }
+
   async isExistProductByName (name: string): Promise<IProductModel> {
     const product = await ProductModel.findOne({ name })
     if (!product) {
       throw new Error('Producto no existe')
     }
     return product
+  }
+
+  async isNotExistProductByName (name: string): Promise<void> {
+    const product = await ProductModel.findOne({ name })
+    if (product) {
+      throw new Error('Producto ya existe')
+    }
   }
 }

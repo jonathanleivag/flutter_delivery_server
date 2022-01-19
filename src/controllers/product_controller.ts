@@ -20,7 +20,7 @@ export default class ProductController {
 
       const isExist = new IsExist()
       const category = await isExist.isExistCategoryByid(body.category)
-      await isExist.isExistProductByName(body.name)
+      await isExist.isNotExistProductByName(body.name)
 
       const newProduct = new ProductModel({ ...body, category: category })
       await newProduct.save()

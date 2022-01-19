@@ -21,7 +21,7 @@ export default class CategoryController {
       await validationCateogry.createCategory().validate(body)
 
       const isExist = new IsExist()
-      isExist.isExistCategoryByName(body.category)
+      await isExist.isNotExistCategoryByName(body.category)
 
       const newCategory = new CategoryModel(body)
       const category = await newCategory.save()
