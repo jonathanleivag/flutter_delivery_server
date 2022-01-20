@@ -15,8 +15,16 @@ export default class RoleRoute {
     )
   }
 
+  getProductByCategory (): Router {
+    return this.router.get(
+      '/category/:id',
+      new ProductController().execute().getProductByCategory
+    )
+  }
+
   execute (): Router {
     this.createProduct()
+    this.getProductByCategory()
     return this.router
   }
 }
