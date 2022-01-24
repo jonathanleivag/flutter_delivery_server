@@ -15,8 +15,16 @@ export default class ShoppRoute {
     )
   }
 
+  getShoppingCartByUser (): Router {
+    return this.router.get(
+      '/all',
+      new ShoppController().execute().getShoppingCartByUser
+    )
+  }
+
   execute (): Router {
     this.addShoppingCart()
+    this.getShoppingCartByUser()
     return this.router
   }
 }
