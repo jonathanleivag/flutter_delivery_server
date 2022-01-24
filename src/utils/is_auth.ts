@@ -36,8 +36,13 @@ export default class IsAuth {
     }
   }
 
-  async isAuth (role: string): Promise<void> {
-    const user = await this.userToken(this.token)
-    await this.role(user, role)
+  async isAuth (role: string): Promise<IUserModel> {
+    const userToken = await this.userToken(this.token)
+    await this.role(userToken, role)
+    const user = await UserModel.findById(userToken.id)
+    if (!user) {
+      throw new Error('No existe el usuario')
+    }
+    return user
   }
 }

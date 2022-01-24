@@ -6,6 +6,7 @@ import morgan from 'morgan'
 import path from 'path'
 import MongoDB from '../db/mongodb'
 import { UserRoute, RoleRoute, CategoryRoute, ProductRoute } from '../routers'
+import ShoppRoute from '../routers/shopp_route'
 
 export default class Server {
   private app: Express
@@ -35,6 +36,7 @@ export default class Server {
     this.app.use('/api/role', new RoleRoute().execute())
     this.app.use('/api/category', new CategoryRoute().execute())
     this.app.use('/api/product', new ProductRoute().execute())
+    this.app.use('/api/shopp', new ShoppRoute().execute())
   }
 
   serverHttp (): void {

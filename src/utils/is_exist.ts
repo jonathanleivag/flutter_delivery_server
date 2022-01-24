@@ -1,5 +1,5 @@
-import { CategoryModel, ProductModel } from '../db/mongodb/models'
-import { ICategoryModel, IProductModel } from '../types/interfeces'
+import { CategoryModel, ProductModel, ShoppModel } from '../db/mongodb/models'
+import { ICategoryModel, IProductModel, IUserModel } from '../types/interfeces'
 
 export default class IsExist {
   async isExistCategoryByid (
@@ -39,6 +39,20 @@ export default class IsExist {
     const product = await ProductModel.findOne({ name })
     if (product) {
       throw new Error('Producto ya existe')
+    }
+  }
+
+  async isExistShoppingCartProduct (id: IProductModel) {
+    const shopp = await ShoppModel.find({ product: id })
+    if (shopp.length === 0) {
+      throw new Error('Producto no existe')
+    }
+  }
+
+  async isNotExistShoppingCartProduct (id: IProductModel, user: IUserModel) {
+    const shopp = await ShoppModel.find({ product: id, user })
+    if (shopp.length > 0) {
+      throw new Error('El producto ya existe')
     }
   }
 }
