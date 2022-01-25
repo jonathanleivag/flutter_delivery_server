@@ -8,6 +8,7 @@ export interface IExicute {
   addShoppingCart: (req: Request, res: Response) => Promise<void>
   getShoppingCartByUser: (req: Request, res: Response) => Promise<void>
   getOneShoppingCartByUser: (req: Request, res: Response) => Promise<void>
+  updateShoppingCart: (req: Request, res: Response) => Promise<void>
 }
 
 export default class ShoppController {
@@ -116,11 +117,37 @@ export default class ShoppController {
     }
   }
 
+  async updateShoppingCart (req: Request, res: Response): Promise<void> {
+    try {
+      const isAuth: IsAuth = new IsAuth(req.headers.authorization ?? '')
+      const user: IUserModel = await isAuth.isAuth('client')
+
+      const body: { id: string; count: number; total: number } = req.body
+      const product = await ShoppModel.find({ product: body.id, user })
+      if (!product) throw new Error('No existe el producto')
+
+      await ShoppModel.findOneAndUpdate(
+        { product: body.id, user },
+        { count: body.count, total: body.total }
+      )
+      res
+        .status(201)
+        .json(new DataJsonResUtil('Se actualizo el carrito', true, null, null))
+    } catch (error) {
+      if (error instanceof Error) {
+        res
+          .status(500)
+          .json(new DataJsonResUtil(error.message, false, null, null))
+      }
+    }
+  }
+
   execute (): IExicute {
     return {
       addShoppingCart: this.addShoppingCart,
       getShoppingCartByUser: this.getShoppingCartByUser,
-      getOneShoppingCartByUser: this.getOneShoppingCartByUser
+      getOneShoppingCartByUser: this.getOneShoppingCartByUser,
+      updateShoppingCart: this.updateShoppingCart
     }
   }
 }

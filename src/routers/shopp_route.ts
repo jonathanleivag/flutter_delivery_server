@@ -29,10 +29,18 @@ export default class ShoppRoute {
     )
   }
 
+  updateShoppingCart (): Router {
+    return this.router.put(
+      '/update',
+      new ShoppController().execute().updateShoppingCart
+    )
+  }
+
   execute (): Router {
     this.addShoppingCart()
     this.getShoppingCartByUser()
     this.getOneShoppingCartByUser()
+    this.updateShoppingCart()
     return this.router
   }
 }
