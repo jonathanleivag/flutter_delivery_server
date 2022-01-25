@@ -7,6 +7,7 @@ import { ProductModel, ShoppModel } from '../db/mongodb/models'
 export interface IExicute {
   addShoppingCart: (req: Request, res: Response) => Promise<void>
   getShoppingCartByUser: (req: Request, res: Response) => Promise<void>
+  getOneShoppingCartByUser: (req: Request, res: Response) => Promise<void>
 }
 
 export default class ShoppController {
@@ -81,10 +82,45 @@ export default class ShoppController {
     }
   }
 
+  async getOneShoppingCartByUser (req: Request, res: Response): Promise<void> {
+    try {
+      const isAuth: IsAuth = new IsAuth(req.headers.authorization ?? '')
+      const user: IUserModel = await isAuth.isAuth('client')
+
+      const product: string = req.params.product
+
+      if (!product) {
+        throw new Error('No existe el producto')
+      }
+
+      const shopp: IShoppModel = await ShoppModel.findOne({
+        user,
+        state: 'pending',
+        product
+      }).populate([
+        { path: 'product', populate: 'category' },
+        { path: 'user', select: '-password' }
+      ])
+
+      if (!shopp) {
+        throw new Error('No se encontro el carrito')
+      }
+
+      res.status(201).json(new DataJsonResUtil(null, true, shopp, null))
+    } catch (error) {
+      if (error instanceof Error) {
+        res
+          .status(500)
+          .json(new DataJsonResUtil(error.message, false, null, null))
+      }
+    }
+  }
+
   execute (): IExicute {
     return {
       addShoppingCart: this.addShoppingCart,
-      getShoppingCartByUser: this.getShoppingCartByUser
+      getShoppingCartByUser: this.getShoppingCartByUser,
+      getOneShoppingCartByUser: this.getOneShoppingCartByUser
     }
   }
 }

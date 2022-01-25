@@ -22,9 +22,17 @@ export default class ShoppRoute {
     )
   }
 
+  getOneShoppingCartByUser (): Router {
+    return this.router.get(
+      '/:product',
+      new ShoppController().execute().getOneShoppingCartByUser
+    )
+  }
+
   execute (): Router {
     this.addShoppingCart()
     this.getShoppingCartByUser()
+    this.getOneShoppingCartByUser()
     return this.router
   }
 }
