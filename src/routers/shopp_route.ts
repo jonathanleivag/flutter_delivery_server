@@ -36,11 +36,19 @@ export default class ShoppRoute {
     )
   }
 
+  deleteShoppingCart (): Router {
+    return this.router.delete(
+      '/delete',
+      new ShoppController().execute().deleteShoppingCart
+    )
+  }
+
   execute (): Router {
     this.addShoppingCart()
     this.getShoppingCartByUser()
     this.getOneShoppingCartByUser()
     this.updateShoppingCart()
+    this.deleteShoppingCart()
     return this.router
   }
 }

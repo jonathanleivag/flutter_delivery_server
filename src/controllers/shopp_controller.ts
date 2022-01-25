@@ -9,6 +9,7 @@ export interface IExicute {
   getShoppingCartByUser: (req: Request, res: Response) => Promise<void>
   getOneShoppingCartByUser: (req: Request, res: Response) => Promise<void>
   updateShoppingCart: (req: Request, res: Response) => Promise<void>
+  deleteShoppingCart: (req: Request, res: Response) => Promise<void>
 }
 
 export default class ShoppController {
@@ -46,7 +47,7 @@ export default class ShoppController {
         .status(201)
         .json(
           new DataJsonResUtil(
-            `Se agrego el producto ${product.name} al carrito de compras`,
+            `Se agrego el producto ${product.name} a la bolsa de compras`,
             true,
             shopp,
             null
@@ -104,7 +105,7 @@ export default class ShoppController {
       ])
 
       if (!shopp) {
-        throw new Error('No se encontro el carrito')
+        throw new Error('No se encontro el producto en la bolsa')
       }
 
       res.status(201).json(new DataJsonResUtil(null, true, shopp, null))
@@ -123,7 +124,7 @@ export default class ShoppController {
       const user: IUserModel = await isAuth.isAuth('client')
 
       const body: { id: string; count: number; total: number } = req.body
-      const product = await ShoppModel.find({ product: body.id, user })
+      const product = await ShoppModel.findOne({ product: body.id, user })
       if (!product) throw new Error('No existe el producto')
 
       await ShoppModel.findOneAndUpdate(
@@ -132,7 +133,33 @@ export default class ShoppController {
       )
       res
         .status(201)
-        .json(new DataJsonResUtil('Se actualizo el carrito', true, null, null))
+        .json(new DataJsonResUtil('Se actualizo el bolsa', true, null, null))
+    } catch (error) {
+      if (error instanceof Error) {
+        res
+          .status(500)
+          .json(new DataJsonResUtil(error.message, false, null, null))
+      }
+    }
+  }
+
+  async deleteShoppingCart (req: Request, res: Response): Promise<void> {
+    try {
+      const isAuth: IsAuth = new IsAuth(req.headers.authorization ?? '')
+      const user: IUserModel = await isAuth.isAuth('client')
+
+      const body: { id: string } = req.body
+      const product = await ShoppModel.findOne({ product: body.id, user })
+
+      if (!product) throw new Error('No existe el producto')
+
+      await ShoppModel.findOneAndDelete({ product: body.id, user })
+
+      res
+        .status(201)
+        .json(
+          new DataJsonResUtil('Se quito producto de la bolsa', true, null, null)
+        )
     } catch (error) {
       if (error instanceof Error) {
         res
@@ -147,7 +174,8 @@ export default class ShoppController {
       addShoppingCart: this.addShoppingCart,
       getShoppingCartByUser: this.getShoppingCartByUser,
       getOneShoppingCartByUser: this.getOneShoppingCartByUser,
-      updateShoppingCart: this.updateShoppingCart
+      updateShoppingCart: this.updateShoppingCart,
+      deleteShoppingCart: this.deleteShoppingCart
     }
   }
 }
