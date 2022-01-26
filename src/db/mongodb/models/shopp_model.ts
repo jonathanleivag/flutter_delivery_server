@@ -5,8 +5,8 @@ const ShoppModel = new Schema<IShoppModel>(
   {
     state: {
       type: String,
-      default: 'pending',
-      enum: ['pending', 'accepted', 'rejected']
+      default: 'shopp',
+      enum: ['shopp', 'pending', 'accepted', 'rejected']
     },
     count: { type: Number, required: true },
     total: { type: Number, required: true },

@@ -68,7 +68,7 @@ export default class ShoppController {
       const user: IUserModel = await isAuth.isAuth('client')
       const shopp: IShoppModel[] = await ShoppModel.find({
         user,
-        state: 'pending'
+        state: 'shopp'
       }).populate([
         { path: 'product', populate: 'category' },
         { path: 'user', select: '-password' }
@@ -97,7 +97,7 @@ export default class ShoppController {
 
       const shopp: IShoppModel = await ShoppModel.findOne({
         user,
-        state: 'pending',
+        state: 'shopp',
         product
       }).populate([
         { path: 'product', populate: 'category' },
@@ -128,7 +128,7 @@ export default class ShoppController {
       if (!product) throw new Error('No existe el producto')
 
       await ShoppModel.findOneAndUpdate(
-        { product: body.id, user },
+        { product: body.id, user, state: 'shopp' },
         { count: body.count, total: body.total }
       )
       res
@@ -153,7 +153,7 @@ export default class ShoppController {
 
       if (!product) throw new Error('No existe el producto')
 
-      await ShoppModel.findOneAndDelete({ product: body.id, user })
+      await ShoppModel.findOneAndDelete({ product: body.id, user, state: 'shopp' })
 
       res
         .status(201)
