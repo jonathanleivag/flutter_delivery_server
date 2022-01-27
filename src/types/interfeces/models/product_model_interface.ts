@@ -2,6 +2,7 @@ import { ICategoryModel } from '..'
 
 export default interface ProductModelInterface {
   id: string
+  _id: string
   name: string
   description: string
   price: number

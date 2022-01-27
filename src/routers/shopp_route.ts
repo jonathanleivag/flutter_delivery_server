@@ -43,12 +43,20 @@ export default class ShoppRoute {
     )
   }
 
+  updateAllShoppingCart (): Router {
+    return this.router.put(
+      '/updateAll',
+      new ShoppController().execute().updateAllShoppingCart
+    )
+  }
+
   execute (): Router {
     this.addShoppingCart()
     this.getShoppingCartByUser()
     this.getOneShoppingCartByUser()
     this.updateShoppingCart()
     this.deleteShoppingCart()
+    this.updateAllShoppingCart()
     return this.router
   }
 }

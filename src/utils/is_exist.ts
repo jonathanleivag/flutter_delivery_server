@@ -50,7 +50,7 @@ export default class IsExist {
   }
 
   async isNotExistShoppingCartProduct (id: IProductModel, user: IUserModel) {
-    const shopp = await ShoppModel.find({ product: id, user })
+    const shopp = await ShoppModel.find({ product: id, user, state: 'shopp' })
     if (shopp.length > 0) {
       throw new Error('El producto ya existe')
     }

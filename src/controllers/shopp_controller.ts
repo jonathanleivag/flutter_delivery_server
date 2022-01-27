@@ -1,5 +1,5 @@
 import { Request, Response } from 'express'
-import { IShoppModel, IUserModel } from '../types/interfeces'
+import { IProductModel, IShoppModel, IUserModel } from '../types/interfeces'
 import { DataJsonResUtil, IsAuth, IsExist } from '../utils'
 import { ShoppValidation } from '../validations'
 import { ProductModel, ShoppModel } from '../db/mongodb/models'
@@ -10,6 +10,17 @@ export interface IExicute {
   getOneShoppingCartByUser: (req: Request, res: Response) => Promise<void>
   updateShoppingCart: (req: Request, res: Response) => Promise<void>
   deleteShoppingCart: (req: Request, res: Response) => Promise<void>
+  updateAllShoppingCart: (req: Request, res: Response) => Promise<void>
+}
+
+export interface IShoppingCart {
+  id: string
+  count: number
+  total: number
+  product: IProductModel
+}
+export interface IShoppingCartAll {
+  products: string
 }
 
 export default class ShoppController {
@@ -123,8 +134,12 @@ export default class ShoppController {
       const isAuth: IsAuth = new IsAuth(req.headers.authorization ?? '')
       const user: IUserModel = await isAuth.isAuth('client')
 
-      const body: { id: string; count: number; total: number } = req.body
-      const product = await ShoppModel.findOne({ product: body.id, user })
+      const body: IShoppingCart = req.body
+      const product = await ShoppModel.findOne({
+        product: body.id,
+        user,
+        state: 'shopp'
+      })
       if (!product) throw new Error('No existe el producto')
 
       await ShoppModel.findOneAndUpdate(
@@ -134,6 +149,50 @@ export default class ShoppController {
       res
         .status(201)
         .json(new DataJsonResUtil('Se actualizo el bolsa', true, null, null))
+    } catch (error) {
+      if (error instanceof Error) {
+        res
+          .status(500)
+          .json(new DataJsonResUtil(error.message, false, null, null))
+      }
+    }
+  }
+
+  async updateAllShoppingCart (req: Request, res: Response): Promise<void> {
+    try {
+      const isAuth: IsAuth = new IsAuth(req.headers.authorization ?? '')
+      const user: IUserModel = await isAuth.isAuth('client')
+
+      const body: IShoppingCartAll = req.body
+
+      for await (const productJson of body.products) {
+        const product = JSON.parse(productJson) as IShoppingCart
+
+        const productExist = await ShoppModel.findOne({
+          product: product.product._id,
+          user,
+          state: 'shopp'
+        })
+
+        if (!productExist) throw new Error('No existe el producto')
+
+        await ShoppModel.findOneAndUpdate(
+          { product: productExist.product._id, user, state: 'shopp' },
+          { count: product.count, total: product.total, state: 'pending' },
+          { new: true }
+        )
+      }
+
+      res
+        .status(201)
+        .json(
+          new DataJsonResUtil(
+            'Se envio tu pedido a la tienda',
+            true,
+            null,
+            null
+          )
+        )
     } catch (error) {
       if (error instanceof Error) {
         res
@@ -153,7 +212,11 @@ export default class ShoppController {
 
       if (!product) throw new Error('No existe el producto')
 
-      await ShoppModel.findOneAndDelete({ product: body.id, user, state: 'shopp' })
+      await ShoppModel.findOneAndDelete({
+        product: body.id,
+        user,
+        state: 'shopp'
+      })
 
       res
         .status(201)
@@ -175,7 +238,8 @@ export default class ShoppController {
       getShoppingCartByUser: this.getShoppingCartByUser,
       getOneShoppingCartByUser: this.getOneShoppingCartByUser,
       updateShoppingCart: this.updateShoppingCart,
-      deleteShoppingCart: this.deleteShoppingCart
+      deleteShoppingCart: this.deleteShoppingCart,
+      updateAllShoppingCart: this.updateAllShoppingCart
     }
   }
 }
