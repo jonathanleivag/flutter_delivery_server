@@ -4,7 +4,7 @@
   "description": "flutter delivery server",
   "main": "index.js",
   "scripts": {
-    "dev": "ts-node-dev ./src/index.ts",
+    "dev": "nodemon",
     "build": "tsc -p .",
     "start": "node ./dist/index.js"
   },
@@ -35,7 +35,8 @@
     "eslint-plugin-import": "^2.25.4",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^5.2.0",
-    "ts-node-dev": "^1.1.8"
+    "nodemon": "^2.0.15",
+    "ts-node": "^10.4.0"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",

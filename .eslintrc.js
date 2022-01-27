@@ -13,6 +13,10 @@ module.exports = {
   rules: {
     'no-debugger': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
     'no-console': ['warn', { allow: ['warn', 'error'] }],
+    'no-warning-comments': [
+      'warn',
+      { terms: ['todo', 'fixme', 'xxx'], location: 'start' }
+    ],
     indent: 'off',
     '@typescript-eslint/indent': ['error', 2]
   }
