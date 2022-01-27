@@ -11,6 +11,7 @@ export interface IExicute {
   updateShoppingCart: (req: Request, res: Response) => Promise<void>
   deleteShoppingCart: (req: Request, res: Response) => Promise<void>
   updateAllShoppingCart: (req: Request, res: Response) => Promise<void>
+  updateAllCountoAndTotal: (req: Request, res: Response) => Promise<void>
 }
 
 export interface IShoppingCart {
@@ -232,6 +233,49 @@ export default class ShoppController {
     }
   }
 
+  async updateAllCountoAndTotal (req: Request, res: Response): Promise<void> {
+    try {
+      const isAuth: IsAuth = new IsAuth(req.headers.authorization ?? '')
+      const user: IUserModel = await isAuth.isAuth('client')
+
+      const body: IShoppingCartAll = req.body
+
+      for await (const productJson of body.products) {
+        const product = JSON.parse(productJson) as IShoppingCart
+
+        const productExist = await ShoppModel.findOne({
+          product: product.product._id,
+          user,
+          state: 'shopp'
+        })
+
+        if (!productExist) throw new Error('No existe el producto')
+
+        await ShoppModel.findOneAndUpdate(
+          { product: productExist.product._id, user, state: 'shopp' },
+          { count: product.count, total: product.total }
+        )
+      }
+
+      res
+        .status(201)
+        .json(
+          new DataJsonResUtil(
+            'Se actualizo la cantidad y el total de los productos',
+            true,
+            null,
+            null
+          )
+        )
+    } catch (error) {
+      if (error instanceof Error) {
+        res
+          .status(500)
+          .json(new DataJsonResUtil(error.message, false, null, null))
+      }
+    }
+  }
+
   execute (): IExicute {
     return {
       addShoppingCart: this.addShoppingCart,
@@ -239,7 +283,8 @@ export default class ShoppController {
       getOneShoppingCartByUser: this.getOneShoppingCartByUser,
       updateShoppingCart: this.updateShoppingCart,
       deleteShoppingCart: this.deleteShoppingCart,
-      updateAllShoppingCart: this.updateAllShoppingCart
+      updateAllShoppingCart: this.updateAllShoppingCart,
+      updateAllCountoAndTotal: this.updateAllCountoAndTotal
     }
   }
 }

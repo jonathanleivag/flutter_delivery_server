@@ -50,6 +50,13 @@ export default class ShoppRoute {
     )
   }
 
+  updateAllCountoAndTotal (): Router {
+    return this.router.put(
+      '/updateAllCountoAndTotal',
+      new ShoppController().execute().updateAllCountoAndTotal
+    )
+  }
+
   execute (): Router {
     this.addShoppingCart()
     this.getShoppingCartByUser()
@@ -57,6 +64,7 @@ export default class ShoppRoute {
     this.updateShoppingCart()
     this.deleteShoppingCart()
     this.updateAllShoppingCart()
+    this.updateAllCountoAndTotal()
     return this.router
   }
 }
