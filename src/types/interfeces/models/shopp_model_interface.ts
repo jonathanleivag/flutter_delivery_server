@@ -4,7 +4,7 @@ import IUserModel from './user_model_interface'
 
 export default interface IShoppModel {
   id?: string
-  state?: 'pending' | 'accepted' | 'rejected' | 'shopp'
+  state?: 'shopp' |'pending' | 'accepted' | 'rejected' | 'dispatched' | 'received'
   count: number
   total: number
   product: IProductModel

@@ -6,7 +6,14 @@ const ShoppModel = new Schema<IShoppModel>(
     state: {
       type: String,
       default: 'shopp',
-      enum: ['shopp', 'pending', 'accepted', 'rejected']
+      enum: [
+        'shopp',
+        'pending',
+        'accepted',
+        'rejected',
+        'dispatched',
+        'received'
+      ]
     },
     count: { type: Number, required: true },
     total: { type: Number, required: true },
