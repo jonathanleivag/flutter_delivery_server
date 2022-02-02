@@ -7,6 +7,7 @@ export { default as IRoleUserModel } from './models/roles_user_model_interface'
 export { default as ICategoryModel } from './models/category_model_inteface'
 export { default as IProductModel } from './models/product_model_interface'
 export { default as IShoppModel } from './models/shopp_model_interface'
+export { default as IAddressModel } from './models/address_model_interface'
 
 /* --------------------------------------------------------------------------- */
 /*                                 controllers                                 */

@@ -5,7 +5,13 @@ import cors from 'cors'
 import morgan from 'morgan'
 import path from 'path'
 import MongoDB from '../db/mongodb'
-import { UserRoute, RoleRoute, CategoryRoute, ProductRoute } from '../routers'
+import {
+  UserRoute,
+  RoleRoute,
+  CategoryRoute,
+  ProductRoute,
+  AddressRoute
+} from '../routers'
 import ShoppRoute from '../routers/shopp_route'
 
 export default class Server {
@@ -37,6 +43,7 @@ export default class Server {
     this.app.use('/api/category', new CategoryRoute().execute())
     this.app.use('/api/product', new ProductRoute().execute())
     this.app.use('/api/shopp', new ShoppRoute().execute())
+    this.app.use('/api/address', new AddressRoute().execute())
   }
 
   serverHttp (): void {

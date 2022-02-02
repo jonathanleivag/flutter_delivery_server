@@ -11,7 +11,10 @@ const ShoppModel = new Schema<IShoppModel>(
     count: { type: Number, required: true },
     total: { type: Number, required: true },
     product: { type: Schema.Types.ObjectId, ref: 'Product', required: true },
-    user: { type: Schema.Types.ObjectId, ref: 'User', required: true }
+    user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+    address: { type: Schema.Types.ObjectId, ref: 'Address', required: false },
+    purchaseId: { type: String, required: false },
+    delivery: { type: Schema.Types.ObjectId, ref: 'User', required: false }
   },
   {
     timestamps: true,

@@ -1,4 +1,5 @@
 import { IProductModel } from '..'
+import IAddressModel from './address_model_interface'
 import IUserModel from './user_model_interface'
 
 export default interface IShoppModel {
@@ -8,4 +9,7 @@ export default interface IShoppModel {
   total: number
   product: IProductModel
   user: IUserModel
+  address?: IAddressModel
+  purchaseId?: string
+  delivery?: IUserModel
 }

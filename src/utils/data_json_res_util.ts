@@ -1,17 +1,17 @@
-import { ICategoryModel, IProductModel, IRoleModel, IRoleUserModel, IShoppModel, IUserControllerResponse, IUserModel } from '../types/interfeces'
+import { IAddressModel, ICategoryModel, IProductModel, IRoleModel, IRoleUserModel, IShoppModel, IUserControllerResponse, IUserModel } from '../types/interfeces'
 import { IUserResponse } from '../types/interfeces/controllers/user_controller_response_interface'
 import { ITokenData } from './jwt_util'
 
 export default class DataJsonResUtil {
   private message: string | null
   private success: boolean
-  private data: IUserModel | IUserModel[] | IUserResponse | IRoleModel | IRoleModel[] | IRoleUserModel | IRoleUserModel[] | ITokenData | ICategoryModel | ICategoryModel[] | IProductModel | IProductModel[] | IShoppModel | IShoppModel[] | null
+  private data: IUserModel | IUserModel[] | IUserResponse | IRoleModel | IRoleModel[] | IRoleUserModel | IRoleUserModel[] | ITokenData | ICategoryModel | ICategoryModel[] | IProductModel | IProductModel[] | IShoppModel | IShoppModel[] | IAddressModel | IAddressModel[] | null
   private token: string | null
 
   constructor (
     message: string | null,
     success: boolean,
-    data: IUserModel | IUserModel[] | IUserResponse | IRoleModel | IRoleModel[] | IRoleUserModel | IRoleUserModel[] | ITokenData | ICategoryModel | ICategoryModel[] | IProductModel | IProductModel[] | IShoppModel | IShoppModel[] | null,
+    data: IUserModel | IUserModel[] | IUserResponse | IRoleModel | IRoleModel[] | IRoleUserModel | IRoleUserModel[] | ITokenData | ICategoryModel | ICategoryModel[] | IProductModel | IProductModel[] | IShoppModel | IShoppModel[] | IAddressModel | IAddressModel[] | null,
     token: string | null
   ) {
     this.message = message
