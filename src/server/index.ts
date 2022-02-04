@@ -10,7 +10,8 @@ import {
   RoleRoute,
   CategoryRoute,
   ProductRoute,
-  AddressRoute
+  AddressRoute,
+  PayRoute
 } from '../routers'
 import ShoppRoute from '../routers/shopp_route'
 
@@ -44,6 +45,7 @@ export default class Server {
     this.app.use('/api/product', new ProductRoute().execute())
     this.app.use('/api/shopp', new ShoppRoute().execute())
     this.app.use('/api/address', new AddressRoute().execute())
+    this.app.use('/api/pay', new PayRoute().execute())
   }
 
   serverHttp (): void {
