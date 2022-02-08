@@ -3,6 +3,7 @@ import { IPayload } from '../../../controllers/pay_controller'
 import { ITokenData } from '../../../utils/jwt_util'
 import IAddressModel from '../models/address_model_interface'
 import IShoppModel from '../models/shopp_model_interface'
+import { IInstallments } from './IInstallments'
 
 export interface IUserResponse {
   id: string
@@ -20,6 +21,6 @@ export interface IUserResponse {
 export default interface IUserControllerResponse {
   message: string | null
   success: boolean
-  data: IUserModel | IUserModel[] | IUserResponse | IRoleModel | IRoleModel[] | IRoleUserModel | IRoleUserModel[] | ITokenData | ICategoryModel | ICategoryModel[] | IProductModel | IProductModel[] | IShoppModel | IShoppModel[] | IAddressModel | IAddressModel[] | IPayload | string | null,
+  data: IUserModel | IUserModel[] | IUserResponse | IRoleModel | IRoleModel[] | IRoleUserModel | IRoleUserModel[] | ITokenData | ICategoryModel | ICategoryModel[] | IProductModel | IProductModel[] | IShoppModel | IShoppModel[] | IAddressModel | IAddressModel[] | IPayload | IInstallments | string | null,
   token: string | null
 }

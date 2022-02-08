@@ -19,9 +19,17 @@ export default class PayRoute {
     )
   }
 
+  installments (): Router {
+    return this.router.get(
+      '/installments',
+      new PayController().execute().installments
+    )
+  }
+
   execute (): Router {
     this.publicKey()
     this.payments()
+    this.installments()
     return this.router
   }
 }

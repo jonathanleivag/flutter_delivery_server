@@ -13,3 +13,4 @@ export { default as IAddressModel } from './models/address_model_interface'
 /*                                 controllers                                 */
 /* --------------------------------------------------------------------------- */
 export { default as IUserControllerResponse } from './controllers/user_controller_response_interface'
+export { IInstallments, Issuer, PayerCost } from './controllers/IInstallments'

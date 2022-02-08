@@ -1,5 +1,5 @@
 import { Request, Response } from 'express'
-import { DataJsonResUtil, IsAuth } from '../utils'
+import { AxiosMercadoPagoUtil, DataJsonResUtil, IsAuth } from '../utils'
 import mercadopago from 'mercadopago'
 import Environments from '../config/env'
 import {
@@ -8,10 +8,12 @@ import {
   PreferencePayer
 } from 'mercadopago/models/preferences/create-payload.model'
 import { ShoppModel } from '../db/mongodb/models'
+import PayValidation from '../validations/pay_validation'
 
 export interface IExicute {
   payments: (req: Request, res: Response) => Promise<void>
   publicKey: (req: Request, res: Response) => Promise<void>
+  installments: (req: Request, res: Response) => Promise<void>
 }
 
 export interface IPayload {
@@ -103,10 +105,33 @@ export default class PayController {
     }
   }
 
+  async installments (req: Request, res: Response): Promise<void> {
+    try {
+      const isAuth = new IsAuth(req.headers.authorization ?? '')
+      await isAuth.isAuth('client')
+
+      const body = req.body as { bin: string; amount: number }
+
+      const payValidation = new PayValidation()
+      await payValidation.installments().validate(body)
+
+      const axios = new AxiosMercadoPagoUtil()
+      const data = await axios.installments(body.bin, body.amount)
+      res.status(200).json(new DataJsonResUtil(null, true, data, null))
+    } catch (error) {
+      if (error instanceof Error) {
+        res
+          .status(400)
+          .json(new DataJsonResUtil(error.message, false, null, null))
+      }
+    }
+  }
+
   execute (): IExicute {
     return {
       payments: this.payments,
-      publicKey: this.publicKey
+      publicKey: this.publicKey,
+      installments: this.installments
     }
   }
 }

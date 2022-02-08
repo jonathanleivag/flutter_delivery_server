@@ -1,18 +1,18 @@
 import { IPayload } from '../controllers/pay_controller'
-import { IAddressModel, ICategoryModel, IProductModel, IRoleModel, IRoleUserModel, IShoppModel, IUserControllerResponse, IUserModel } from '../types/interfeces'
+import { IAddressModel, ICategoryModel, IInstallments, IProductModel, IRoleModel, IRoleUserModel, IShoppModel, IUserControllerResponse, IUserModel } from '../types/interfeces'
 import { IUserResponse } from '../types/interfeces/controllers/user_controller_response_interface'
 import { ITokenData } from './jwt_util'
 
 export default class DataJsonResUtil {
   private message: string | null
   private success: boolean
-  private data: IUserModel | IUserModel[] | IUserResponse | IRoleModel | IRoleModel[] | IRoleUserModel | IRoleUserModel[] | ITokenData | ICategoryModel | ICategoryModel[] | IProductModel | IProductModel[] | IShoppModel | IShoppModel[] | IAddressModel | IAddressModel[] | IPayload |string| null
+  private data: IUserModel | IUserModel[] | IUserResponse | IRoleModel | IRoleModel[] | IRoleUserModel | IRoleUserModel[] | ITokenData | ICategoryModel | ICategoryModel[] | IProductModel | IProductModel[] | IShoppModel | IShoppModel[] | IAddressModel | IAddressModel[] | IPayload | string | IInstallments | null
   private token: string | null
 
   constructor (
     message: string | null,
     success: boolean,
-    data: IUserModel | IUserModel[] | IUserResponse | IRoleModel | IRoleModel[] | IRoleUserModel | IRoleUserModel[] | ITokenData | ICategoryModel | ICategoryModel[] | IProductModel | IProductModel[] | IShoppModel | IShoppModel[] | IAddressModel | IAddressModel[] | IPayload | string| null,
+    data: IUserModel | IUserModel[] | IUserResponse | IRoleModel | IRoleModel[] | IRoleUserModel | IRoleUserModel[] | ITokenData | ICategoryModel | ICategoryModel[] | IProductModel | IProductModel[] | IShoppModel | IShoppModel[] | IAddressModel | IAddressModel[] | IPayload | string| IInstallments | null,
     token: string | null
   ) {
     this.message = message

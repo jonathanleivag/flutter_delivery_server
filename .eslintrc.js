@@ -17,6 +17,7 @@ module.exports = {
       'warn',
       { terms: ['todo', 'fixme', 'xxx'], location: 'start' }
     ],
+    'no-use-before-define': 'off',
     indent: 'off',
     '@typescript-eslint/indent': ['error', 2]
   }
