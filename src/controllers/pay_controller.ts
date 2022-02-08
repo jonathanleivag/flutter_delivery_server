@@ -11,6 +11,12 @@ import { ShoppModel } from '../db/mongodb/models'
 
 export interface IExicute {
   payments: (req: Request, res: Response) => Promise<void>
+  publicKey: (req: Request, res: Response) => Promise<void>
+}
+
+export interface IPayload {
+  id: string
+  publicKey: string
 }
 
 export default class PayController {
@@ -60,7 +66,34 @@ export default class PayController {
       }
 
       const data = await mercadopago.preferences.create(preference)
-      res.status(200).json(data)
+      res
+        .status(200)
+        .json(
+          new DataJsonResUtil(
+            '',
+            true,
+            { id: data.body.id, publicKey: new Environments().PUBLIC_KEY },
+            null
+          )
+        )
+    } catch (error) {
+      if (error instanceof Error) {
+        res
+          .status(400)
+          .json(new DataJsonResUtil(error.message, false, null, null))
+      }
+    }
+  }
+
+  async publicKey (req: Request, res: Response): Promise<void> {
+    try {
+      const isAuth = new IsAuth(req.headers.authorization ?? '')
+      await isAuth.isAuth('client')
+      res
+        .status(200)
+        .json(
+          new DataJsonResUtil(null, true, new Environments().PUBLIC_KEY, null)
+        )
     } catch (error) {
       if (error instanceof Error) {
         res
@@ -72,7 +105,8 @@ export default class PayController {
 
   execute (): IExicute {
     return {
-      payments: this.payments
+      payments: this.payments,
+      publicKey: this.publicKey
     }
   }
 }

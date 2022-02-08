@@ -12,7 +12,15 @@ export default class PayRoute {
     return this.router.post('/payments', new PayController().execute().payments)
   }
 
+  publicKey (): Router {
+    return this.router.get(
+      '/public-key',
+      new PayController().execute().publicKey
+    )
+  }
+
   execute (): Router {
+    this.publicKey()
     this.payments()
     return this.router
   }
