@@ -20,7 +20,7 @@ export default class PayRoute {
   }
 
   installments (): Router {
-    return this.router.get(
+    return this.router.post(
       '/installments',
       new PayController().execute().installments
     )
