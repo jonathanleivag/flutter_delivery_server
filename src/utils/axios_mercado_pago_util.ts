@@ -16,7 +16,6 @@ export default class AxiosMercadoPagoUtil {
   private createAxios (): AxiosInstance {
     return axios.create({
       baseURL: this.url,
-      timeout: 1000,
       headers: this.headers
     })
   }

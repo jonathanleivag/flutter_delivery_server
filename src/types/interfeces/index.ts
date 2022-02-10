@@ -14,3 +14,8 @@ export { default as IAddressModel } from './models/address_model_interface'
 /* --------------------------------------------------------------------------- */
 export { default as IUserControllerResponse } from './controllers/user_controller_response_interface'
 export { IInstallments, Issuer, PayerCost } from './controllers/IInstallments'
+export {
+  Cardholder,
+  ITokenCard,
+  Identification
+} from './controllers/ITokenCard'

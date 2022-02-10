@@ -9,11 +9,13 @@ import {
 } from 'mercadopago/models/preferences/create-payload.model'
 import { ShoppModel } from '../db/mongodb/models'
 import PayValidation from '../validations/pay_validation'
+import { PaymentCreateResponse } from 'mercadopago/resources/payment'
 
 export interface IExicute {
   payments: (req: Request, res: Response) => Promise<void>
   publicKey: (req: Request, res: Response) => Promise<void>
   installments: (req: Request, res: Response) => Promise<void>
+  paymentCreditCard: (req: Request, res: Response) => Promise<void>
 }
 
 export interface IPayload {
@@ -127,11 +129,66 @@ export default class PayController {
     }
   }
 
+  async paymentCreditCard (req: Request, res: Response): Promise<void> {
+    try {
+      const isAuth = new IsAuth(req.headers.authorization ?? '')
+      const user = await isAuth.isAuth('client')
+      const body = req.body as {
+        token: string
+        transactionAmount: number
+        installments: number
+        paymentMethodId: string
+      }
+
+      const payValidation = new PayValidation()
+      await payValidation.paymentCreditCard().validate(body)
+
+      mercadopago.configurations.setAccessToken(new Environments().ACCESS_TOKEN)
+      const data: PaymentCreateResponse = await mercadopago.payment.save({
+        token: body.token,
+        transaction_amount: body.transactionAmount,
+        installments: body.installments,
+        payment_method_id: body.paymentMethodId,
+        payer: {
+          email: user.email
+        }
+      })
+
+      if (data.status === 201) {
+        const shopps = await ShoppModel.find({ user, status: 'shopp' })
+        if (shopps.length === 0) {
+          throw new Error('No existen productos en la bolsa')
+        }
+
+        for await (const shopp of shopps) {
+          await ShoppModel.findByIdAndUpdate(shopp.id, { state: 'pending' })
+        }
+      }
+      res
+        .status(data.status)
+        .json(
+          new DataJsonResUtil(
+            'Su orden fue procesada exitosamente',
+            true,
+            data,
+            null
+          )
+        )
+    } catch (error) {
+      if (error instanceof Error) {
+        res
+          .status(400)
+          .json(new DataJsonResUtil(error.message, false, null, null))
+      }
+    }
+  }
+
   execute (): IExicute {
     return {
       payments: this.payments,
       publicKey: this.publicKey,
-      installments: this.installments
+      installments: this.installments,
+      paymentCreditCard: this.paymentCreditCard
     }
   }
 }

@@ -7,4 +7,15 @@ export default class PayValidation {
       amount: number().required('El monto es requerido')
     })
   }
+
+  paymentCreditCard () {
+    return object().shape({
+      token: string().required('El token es requerido'),
+      transactionAmount: number().required('El monto es requerido'),
+      installments: number().required('El número de cuotas es requerido'),
+      paymentMethodId: string().required(
+        'El id del método de pago es requerido'
+      )
+    })
+  }
 }

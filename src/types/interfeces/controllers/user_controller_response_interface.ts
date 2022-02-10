@@ -1,3 +1,4 @@
+import { PaymentCreateResponse } from 'mercadopago/resources/payment'
 import { ICategoryModel, IProductModel, IRoleModel, IRoleUserModel, IUserModel } from '../'
 import { IPayload } from '../../../controllers/pay_controller'
 import { ITokenData } from '../../../utils/jwt_util'
@@ -21,6 +22,6 @@ export interface IUserResponse {
 export default interface IUserControllerResponse {
   message: string | null
   success: boolean
-  data: IUserModel | IUserModel[] | IUserResponse | IRoleModel | IRoleModel[] | IRoleUserModel | IRoleUserModel[] | ITokenData | ICategoryModel | ICategoryModel[] | IProductModel | IProductModel[] | IShoppModel | IShoppModel[] | IAddressModel | IAddressModel[] | IPayload | IInstallments | string | null,
+  data: IUserModel | IUserModel[] | IUserResponse | IRoleModel | IRoleModel[] | IRoleUserModel | IRoleUserModel[] | ITokenData | ICategoryModel | ICategoryModel[] | IProductModel | IProductModel[] | IShoppModel | IShoppModel[] | IAddressModel | IAddressModel[] | IPayload | IInstallments | string | PaymentCreateResponse | null,
   token: string | null
 }

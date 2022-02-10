@@ -26,10 +26,18 @@ export default class PayRoute {
     )
   }
 
+  paymentCreditCard (): Router {
+    return this.router.post(
+      '/payment-credit-card',
+      new PayController().execute().paymentCreditCard
+    )
+  }
+
   execute (): Router {
     this.publicKey()
     this.payments()
     this.installments()
+    this.paymentCreditCard()
     return this.router
   }
 }
