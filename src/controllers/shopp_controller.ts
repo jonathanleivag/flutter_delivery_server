@@ -12,6 +12,9 @@ export interface IExicute {
   deleteShoppingCart: (req: Request, res: Response) => Promise<void>
   updateAllShoppingCart: (req: Request, res: Response) => Promise<void>
   updateAllCountoAndTotal: (req: Request, res: Response) => Promise<void>
+  getPurchaseIdByState: (req: Request, res: Response) => Promise<void>
+  getNumberOrder: (req: Request, res: Response) => Promise<void>
+  getUserShopp: (req: Request, res: Response) => Promise<void>
 }
 
 export interface IShoppingCart {
@@ -276,6 +279,83 @@ export default class ShoppController {
     }
   }
 
+  async getPurchaseIdByState (req: Request, res: Response): Promise<void> {
+    try {
+      const isAuth = new IsAuth(req.headers.authorization ?? '')
+      await isAuth.isAuth('local')
+
+      const params = req.params
+      const validateShopp = new ShoppValidation()
+      await validateShopp.getProductByState().validate(params)
+
+      const shopps = await ShoppModel.find({ state: params.state })
+        .select('purchaseId -_id')
+        .distinct('purchaseId')
+
+      res
+        .status(200)
+        .json(new DataJsonResUtil('Productos por estado', true, shopps, null))
+    } catch (error) {
+      if (error instanceof Error) {
+        res
+          .status(500)
+          .json(new DataJsonResUtil(error.message, false, null, null))
+      }
+    }
+  }
+
+  async getNumberOrder (req: Request, res: Response): Promise<void> {
+    try {
+      const isAuth = new IsAuth(req.headers.authorization ?? '')
+      await isAuth.isAuth('local')
+
+      const params = req.params as { purchaseId: string }
+      const validateShopp = new ShoppValidation()
+      await validateShopp.getNumberOrder().validate(params)
+
+      const order = await ShoppModel.find({ purchaseId: params.purchaseId })
+        .select('norder -_id')
+        .distinct('norder')
+
+      res
+        .status(200)
+        .json(new DataJsonResUtil('Productos por estado', true, order, null))
+    } catch (error) {
+      if (error instanceof Error) {
+        res
+          .status(500)
+          .json(new DataJsonResUtil(error.message, false, null, null))
+      }
+    }
+  }
+
+  async getUserShopp (req: Request, res: Response): Promise<void> {
+    try {
+      const isAuth = new IsAuth(req.headers.authorization ?? '')
+      await isAuth.isAuth('local')
+
+      const params = req.params as { purchaseId: string }
+      const validateShopp = new ShoppValidation()
+      await validateShopp.getNumberOrder().validate(params)
+
+      const userShopp = await ShoppModel.findOne({
+        purchaseId: params.purchaseId
+      }).populate([{ path: 'user', select: '-password' }, 'address'])
+
+      res
+        .status(200)
+        .json(
+          new DataJsonResUtil('Productos por estado', true, userShopp, null)
+        )
+    } catch (error) {
+      if (error instanceof Error) {
+        res
+          .status(500)
+          .json(new DataJsonResUtil(error.message, false, null, null))
+      }
+    }
+  }
+
   execute (): IExicute {
     return {
       addShoppingCart: this.addShoppingCart,
@@ -284,7 +364,10 @@ export default class ShoppController {
       updateShoppingCart: this.updateShoppingCart,
       deleteShoppingCart: this.deleteShoppingCart,
       updateAllShoppingCart: this.updateAllShoppingCart,
-      updateAllCountoAndTotal: this.updateAllCountoAndTotal
+      updateAllCountoAndTotal: this.updateAllCountoAndTotal,
+      getPurchaseIdByState: this.getPurchaseIdByState,
+      getNumberOrder: this.getNumberOrder,
+      getUserShopp: this.getUserShopp
     }
   }
 }

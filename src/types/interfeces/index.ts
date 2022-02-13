@@ -19,3 +19,11 @@ export {
   ITokenCard,
   Identification
 } from './controllers/ITokenCard'
+
+export {
+  Address,
+  Category,
+  IGetProductByState,
+  Product,
+  User
+} from './controllers/IGetProductByState'

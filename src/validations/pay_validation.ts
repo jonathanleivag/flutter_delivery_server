@@ -18,4 +18,10 @@ export default class PayValidation {
       )
     })
   }
+
+  setPurchaseId () {
+    return object().shape({
+      purchaseId: string().required('El id de la compra es requerido')
+    })
+  }
 }

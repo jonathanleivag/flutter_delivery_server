@@ -57,6 +57,27 @@ export default class ShoppRoute {
     )
   }
 
+  getPurchaseIdByState (): Router {
+    return this.router.get(
+      '/purchaseIdByState/:state',
+      new ShoppController().execute().getPurchaseIdByState
+    )
+  }
+
+  getNumberOrder (): Router {
+    return this.router.get(
+      '/numberOrder/:purchaseId',
+      new ShoppController().execute().getNumberOrder
+    )
+  }
+
+  getUserShopp (): Router {
+    return this.router.get(
+      '/userShopp/:purchaseId',
+      new ShoppController().execute().getUserShopp
+    )
+  }
+
   execute (): Router {
     this.addShoppingCart()
     this.getShoppingCartByUser()
@@ -65,6 +86,9 @@ export default class ShoppRoute {
     this.deleteShoppingCart()
     this.updateAllShoppingCart()
     this.updateAllCountoAndTotal()
+    this.getPurchaseIdByState()
+    this.getNumberOrder()
+    this.getUserShopp()
     return this.router
   }
 }

@@ -21,7 +21,8 @@ const ShoppModel = new Schema<IShoppModel>(
     user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
     address: { type: Schema.Types.ObjectId, ref: 'Address', required: false },
     purchaseId: { type: String, required: false },
-    delivery: { type: Schema.Types.ObjectId, ref: 'User', required: false }
+    delivery: { type: Schema.Types.ObjectId, ref: 'User', required: false },
+    norder: { type: Number, required: false }
   },
   {
     timestamps: true,

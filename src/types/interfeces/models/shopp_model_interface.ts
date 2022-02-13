@@ -12,4 +12,5 @@ export default interface IShoppModel {
   address?: IAddressModel
   purchaseId?: string
   delivery?: IUserModel
+  norder?: number
 }

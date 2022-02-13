@@ -155,15 +155,20 @@ export default class PayController {
       })
 
       if (data.status === 201) {
-        const shopps = await ShoppModel.find({ user, status: 'shopp' })
+        const shopps = await ShoppModel.find({ user, state: 'shopp' })
         if (shopps.length === 0) {
           throw new Error('No existen productos en la bolsa')
         }
-
+        const date = new Date().getTime()
         for await (const shopp of shopps) {
-          await ShoppModel.findByIdAndUpdate(shopp.id, { state: 'pending' })
+          await ShoppModel.findByIdAndUpdate(shopp.id, {
+            state: 'pending',
+            purchaseId: data.idempotency,
+            norder: date
+          })
         }
       }
+
       res
         .status(data.status)
         .json(

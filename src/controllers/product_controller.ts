@@ -60,7 +60,9 @@ export default class ProductController {
         throw new Error('No se encontro la categoria')
       }
 
-      const products = await ProductModel.find({ category }).populate('category')
+      const products = await ProductModel.find({ category }).populate(
+        'category'
+      )
       res
         .status(200)
         .json(
