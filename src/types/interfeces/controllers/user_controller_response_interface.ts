@@ -22,6 +22,6 @@ export interface IUserResponse {
 export default interface IUserControllerResponse {
   message: string | null
   success: boolean
-  data: IUserModel | IUserModel[] | IUserResponse | IRoleModel | IRoleModel[] | IRoleUserModel | IRoleUserModel[] | ITokenData | ICategoryModel | ICategoryModel[] | IProductModel | IProductModel[] | IShoppModel | IShoppModel[] | IAddressModel | IAddressModel[] | IPayload | IInstallments | string | string[] | PaymentCreateResponse | IGetProductByState | null,
+  data: IUserModel | IUserModel[] | IUserResponse | IRoleModel | IRoleModel[] | IRoleUserModel | IRoleUserModel[] | ITokenData | ICategoryModel | ICategoryModel[] | IProductModel | IProductModel[] | IShoppModel | IShoppModel[] | IAddressModel | IAddressModel[] | IPayload | IInstallments | string | string[] | PaymentCreateResponse | IGetProductByState | number | null,
   token: string | null
 }

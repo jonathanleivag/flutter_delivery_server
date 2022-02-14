@@ -7,13 +7,13 @@ import { ITokenData } from './jwt_util'
 export default class DataJsonResUtil {
   private message: string | null
   private success: boolean
-  private data: IUserModel | IUserModel[] | IUserResponse | IRoleModel | IRoleModel[] | IRoleUserModel | IRoleUserModel[] | ITokenData | ICategoryModel | ICategoryModel[] | IProductModel | IProductModel[] | IShoppModel | IShoppModel[] | IAddressModel | IAddressModel[] | IPayload | string | string[] | IInstallments | PaymentCreateResponse | IGetProductByState |null
+  private data: IUserModel | IUserModel[] | IUserResponse | IRoleModel | IRoleModel[] | IRoleUserModel | IRoleUserModel[] | ITokenData | ICategoryModel | ICategoryModel[] | IProductModel | IProductModel[] | IShoppModel | IShoppModel[] | IAddressModel | IAddressModel[] | IPayload | string | string[] | IInstallments | PaymentCreateResponse | IGetProductByState | number |null
   private token: string | null
 
   constructor (
     message: string | null,
     success: boolean,
-    data: IUserModel | IUserModel[] | IUserResponse | IRoleModel | IRoleModel[] | IRoleUserModel | IRoleUserModel[] | ITokenData | ICategoryModel | ICategoryModel[] | IProductModel | IProductModel[] | IShoppModel | IShoppModel[] | IAddressModel | IAddressModel[] | IPayload | string| string[] | IInstallments | PaymentCreateResponse | IGetProductByState | null,
+    data: IUserModel | IUserModel[] | IUserResponse | IRoleModel | IRoleModel[] | IRoleUserModel | IRoleUserModel[] | ITokenData | ICategoryModel | ICategoryModel[] | IProductModel | IProductModel[] | IShoppModel | IShoppModel[] | IAddressModel | IAddressModel[] | IPayload | string| string[] | IInstallments | PaymentCreateResponse | IGetProductByState | number | null,
     token: string | null
   ) {
     this.message = message

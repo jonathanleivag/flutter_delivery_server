@@ -15,6 +15,8 @@ export interface IExicute {
   getPurchaseIdByState: (req: Request, res: Response) => Promise<void>
   getNumberOrder: (req: Request, res: Response) => Promise<void>
   getUserShopp: (req: Request, res: Response) => Promise<void>
+  getProductByPurchaseId: (req: Request, res: Response) => Promise<void>
+  getProductByPurchaseIdTotal: (req: Request, res: Response) => Promise<void>
 }
 
 export interface IShoppingCart {
@@ -292,6 +294,8 @@ export default class ShoppController {
         .select('purchaseId -_id')
         .distinct('purchaseId')
 
+      if (shopps.length === 0) throw new Error('No existen compras')
+
       res
         .status(200)
         .json(new DataJsonResUtil('Productos por estado', true, shopps, null))
@@ -317,9 +321,9 @@ export default class ShoppController {
         .select('norder -_id')
         .distinct('norder')
 
-      res
-        .status(200)
-        .json(new DataJsonResUtil('Productos por estado', true, order, null))
+      if (order.length === 0) throw new Error('No existe el pedido')
+
+      res.status(200).json(new DataJsonResUtil(null, true, order, null))
     } catch (error) {
       if (error instanceof Error) {
         res
@@ -342,11 +346,72 @@ export default class ShoppController {
         purchaseId: params.purchaseId
       }).populate([{ path: 'user', select: '-password' }, 'address'])
 
-      res
-        .status(200)
-        .json(
-          new DataJsonResUtil('Productos por estado', true, userShopp, null)
-        )
+      if (!userShopp) throw new Error('No existe el pedido')
+
+      res.status(200).json(new DataJsonResUtil(null, true, userShopp, null))
+    } catch (error) {
+      if (error instanceof Error) {
+        res
+          .status(500)
+          .json(new DataJsonResUtil(error.message, false, null, null))
+      }
+    }
+  }
+
+  async getProductByPurchaseId (req: Request, res: Response): Promise<void> {
+    try {
+      const isAuth = new IsAuth(req.headers.authorization ?? '')
+      await isAuth.isAuth('local')
+
+      const params = req.params as { purchaseId: string }
+      const validateShopp = new ShoppValidation()
+      await validateShopp.getNumberOrder().validate(params)
+
+      const shopps = await ShoppModel.find({
+        purchaseId: params.purchaseId
+      }).populate([
+        { path: 'product' },
+        { path: 'user', select: '-password' },
+        'address'
+      ])
+
+      res.status(200).json(new DataJsonResUtil(null, true, shopps, null))
+    } catch (error) {
+      if (error instanceof Error) {
+        res
+          .status(500)
+          .json(new DataJsonResUtil(error.message, false, null, null))
+      }
+    }
+  }
+
+  async getProductByPurchaseIdTotal (
+    req: Request,
+    res: Response
+  ): Promise<void> {
+    try {
+      const isAuth = new IsAuth(req.headers.authorization ?? '')
+      await isAuth.isAuth('local')
+
+      const params = req.params as { purchaseId: string }
+      const validateShopp = new ShoppValidation()
+      await validateShopp.getNumberOrder().validate(params)
+
+      const shopps = await ShoppModel.find({
+        purchaseId: params.purchaseId
+      }).populate([
+        { path: 'product' },
+        { path: 'user', select: '-password' },
+        'address'
+      ])
+
+      let total = 0
+
+      for await (const shopp of shopps) {
+        total = total + shopp.total
+      }
+
+      res.status(200).json(new DataJsonResUtil(null, true, total, null))
     } catch (error) {
       if (error instanceof Error) {
         res
@@ -367,7 +432,9 @@ export default class ShoppController {
       updateAllCountoAndTotal: this.updateAllCountoAndTotal,
       getPurchaseIdByState: this.getPurchaseIdByState,
       getNumberOrder: this.getNumberOrder,
-      getUserShopp: this.getUserShopp
+      getUserShopp: this.getUserShopp,
+      getProductByPurchaseId: this.getProductByPurchaseId,
+      getProductByPurchaseIdTotal: this.getProductByPurchaseIdTotal
     }
   }
 }
